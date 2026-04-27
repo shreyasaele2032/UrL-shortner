@@ -1,41 +1,45 @@
 const express = require('express');
 const app = express();
-const PORT = 8001;
+const PORT = 8008;
+const path = require('path');
 
-const URL = require("./models/url");
+const static = require('./route/staticRouter');
+const URL = require('./models/url');
 const urlRoute = require('./route/url');
+const userRouter=require('./route/user')
+
 const { mongodbconnect } = require('./connect');
 
 app.use(express.json());
-app.use('/url', urlRoute);
+app.use(express.urlencoded({ extended: false }));
 
-mongodbconnect('mongodb://localhost:27017/short-URL')
-.then(() => console.log("mongodb connected"))
-.catch(console.error);
+app.set('view engine', 'ejs');
+app.set('views', path.resolve('./views'));
+
+app.use('/', static);
+app.use('/url', urlRoute);
+app.use('/user',userRouter);
 
 app.get('/:shortId', async (req, res) => {
-    console.log("🔥 GET ROUTE HIT");
-    try {
-        const shortId = req.params.shortId;
+    const shortId = req.params.shortId;
 
-        console.log("GET shortId:", shortId);
+    const entry = await URL.findOne({ shortId });
 
-        const entry = await URL.findOne({ shortId });
-
-        console.log("DB entry:", entry);
-
-        if (!entry) {
-            return res.status(404).send("Not found");
-        }
-
-        return res.redirect(entry.redirectUrl);
-
-    } catch (err) {
-        console.log(err);
-        return res.status(500).send("Server error");
+    if (!entry) {
+        return res.status(404).send("Not found");
     }
+
+    return res.redirect(entry.redirectUrl);
 });
 
-app.listen(PORT, () => {
-    console.log(`server started at ${PORT}`);
-});
+mongodbconnect('mongodb://localhost:27017/short-URL')
+.then(() => {
+    console.log("mongodb connected");
+
+    app.listen(PORT, () => {
+        console.log(`server started at ${PORT}`);
+    });
+})
+.catch(console.error);
+
+
