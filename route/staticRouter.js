@@ -8,4 +8,11 @@ router.get('/',(req,res)=>{
 router.get('/signup',(req,res)=>{
     return res.render('signup');
 })
+
+// router.get("/login", (req, res) => {
+//     console.log("Login route hit");
+//     return res.render("login");
+// });
+
+
 module.exports=router;

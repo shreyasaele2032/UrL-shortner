@@ -6,19 +6,23 @@
     <title>Signup</title>
 </head>
 <body>
+
     <h1>Signup</h1>
 
     <form action="/user" method="POST">
-        <label>Full name </label>
-        <input type="text" required name="name" placeholder="Enter name">
 
-        <label>Email </label>
-        <input type="email" required name="email" placeholder="Enter email">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter name" required>
 
-        <label>Password </label>
-        <input type="password" required name="pass" placeholder="Enter password">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Enter email" required>
+
+        <label>Password</label>
+        <input type="password" name="pass" placeholder="Enter password" required>
 
         <button type="submit">Signup</button>
+
     </form>
+
 </body>
 </html>
